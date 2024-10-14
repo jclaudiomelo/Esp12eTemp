@@ -1,23 +1,36 @@
 #include <Arduino.h>
 #include "DisplayConfig.h"
 #include "SensorConfig.h"
+#include "Network.h"
+#include "config.h"
 
-void setup() {
+void setup()
+{
   // Inicializando o monitor serial
   Serial.begin(115200);
 
   // Inicializando o display e o sensor
   setupDisplay();
   setupSensor();
+  ConectaWifi();
+  handleData();
+
+  // Inicializando a API após conexão WiFi
+  server.on("/api/dados", handleData);
+  server.begin();
+
+  Serial.println(F("Servidor iniciado"));
 }
 
-void loop() {
+void loop()
+{
   // Leitura de temperatura e umidade
   float h = readHumidity();
   float t = readTemperature();
 
   // Verificando se houve erro ao ler o sensor
-  if (isnan(h) || isnan(t)) {
+  if (isnan(h) || isnan(t))
+  {
     Serial.println(F("Falha ao ler o sensor DHT!"));
     return;
   }
@@ -45,6 +58,15 @@ void loop() {
 
   display.display(); // Atualiza o display
 
+  // Exibindo o IP no display
+  display.setCursor(0, 26);
+  display.print("IP: ");
+  display.print(WiFi.localIP());
+
+  display.display(); // Atualiza o display
+
+  // Processa requisições da API
+  server.handleClient();
   // Esperar 2 segundos antes da próxima leitura
   delay(2000);
 }
