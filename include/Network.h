@@ -1,6 +1,6 @@
 #ifndef NETWORK_H
 #define NETWORK_H
-#include <Sensor.h>
+#include <SensorConfig.h>
 #include <DisplayConfig.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>

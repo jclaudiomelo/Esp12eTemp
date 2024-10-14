@@ -16,7 +16,7 @@ void setup()
   handleData();
 
   // Inicializando a API após conexão WiFi
-  server.on("/api/dados", handleData);
+  server.on("/dados", handleData);
   server.begin();
 
   Serial.println(F("Servidor iniciado"));
@@ -59,11 +59,10 @@ void loop()
   display.display(); // Atualiza o display
 
   // Exibindo o IP no display
-  display.setCursor(0, 26);
+  display.setCursor(0, 30);
   display.print("IP: ");
-  display.print(WiFi.localIP());
-
-  display.display(); // Atualiza o display
+  display.print(WiFi.localIP().toString() + "/dados");
+  display.display();
 
   // Processa requisições da API
   server.handleClient();
